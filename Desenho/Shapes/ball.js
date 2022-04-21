@@ -24,3 +24,4 @@ function Ball (radius, color) {
     }
     context.restore();
   };
+
