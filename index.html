@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-   
+
     <canvas id="canvas" width="600" height="600">
         <p> O Browser não suporta o elemento <code>canvas</code></p>
         <p>https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes</p>
@@ -21,17 +23,19 @@
     <script src="./Desenho/Shapes/AnyPolygon.js"></script>
 
 
-    <script >
- var canvas = document.getElementById('canvas'),
-                context = canvas.getContext('2d');
-       // drawGrid(10,10,"black");
-        r= new Rectangle(15,15,"red");
-       // r.draw(context);
+    <script>
+        var canvas = document.getElementById('canvas'),
+            context = canvas.getContext('2d');
+        // drawGrid(10,10,"black");
+        r = new Rectangle(15, 15, "red");
+        // r.draw(context);
         //drawTriangle();
         drawSmile();
 
-        drawPolygon(context,300,300,8);
-        </script>
+        drawPolygon(context, 300, 300, 8, 50);
+
+    </script>
 </body>
 </body>
+
 </html>

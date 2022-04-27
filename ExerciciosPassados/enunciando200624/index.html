@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>enunciando200624
+    </title>
+    <link rel="stylesheet" href="./Style.css">
+</head>
+
+<body>
+    <canvas id="canvas" width="600" height="500">
+        <p> O Browser não suporta o elemento <code>canvas</code></p>
+        <p>https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes</p>
+    </canvas>
+
+
+    <script src="../../include/utils.js"></script>
+
+    <script src="./polygon.js"></script>
+    <script>
+        window.onload = function () {
+            var canvas = document.getElementById('canvas'),
+                context = canvas.getContext('2d');
+            const a = (2 * Math.PI) / 4;
+
+
+            var s1 = new Polygon(canvas.width / 2, canvas.height / 2, 4, 100, -Math.PI / 4);
+
+            var s2 = new Polygon(canvas.width / 2, canvas.height / 2, 4, 100, 0);
+            var pent1 = [];
+            var pent2 = [];
+
+            for (var i = 0; i < s1.sides; i++) {
+                var sideX = canvas.width / 2 + 100 * Math.cos(a * i),
+                    sideY = canvas.height / 2 + 100 * Math.sin(a * i);
+
+                pent1.push(new Polygon(sideX, sideY, 5, 15, -Math.PI / i + 1));
+            }
+
+
+
+            (function drawFrame() {
+                window.requestAnimationFrame(drawFrame, canvas);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                pent1.forEach(element => {
+                    element.draw(context);
+                });
+                s1.draw(context);
+                s2.draw(context);
+            }());
+        };
+    </script>
+</body>
+
+</html>

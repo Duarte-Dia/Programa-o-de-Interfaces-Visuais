@@ -1,9 +1,9 @@
-function Polygon(x,y,sides,radius) {
+function Polygon(x,y,sides,radius,rotation) {
     this.x = x;
     this.y = y;
     this.r = radius;
     this.sides = sides;
-    this.rotation = 0;
+    this.rotation=rotation;
     this.strokeColor = "#ffff00";
     this.fillColor = "#007700";
 
@@ -14,6 +14,7 @@ function Polygon(x,y,sides,radius) {
         this.imgCarregada = true;
         console.log("CARREGADA")
     }.bind(this), false);
+    
   }
   
   Polygon.prototype.draw = function (context){
