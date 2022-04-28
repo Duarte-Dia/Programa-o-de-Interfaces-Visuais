@@ -20,24 +20,81 @@
     <script src="../../include/utils.js"></script>
 
     <script src="./polygon.js"></script>
+    <script src="./ball.js"></script>
     <script>
         window.onload = function () {
             var canvas = document.getElementById('canvas'),
-                context = canvas.getContext('2d');
+                context = canvas.getContext('2d'),
+                isMouseDown = true,
+                mouse = utils.captureMouse(canvas);
+
+
             const a = (2 * Math.PI) / 4;
 
 
             var s1 = new Polygon(canvas.width / 2, canvas.height / 2, 4, 100, -Math.PI / 4);
 
             var s2 = new Polygon(canvas.width / 2, canvas.height / 2, 4, 100, 0);
+            var penta = new Polygon(100,100, 5, 15, -Math.PI / i + 1);
             var pent1 = [];
             var pent2 = [];
+            
+
+
+            canvas.addEventListener('mousedown', function () {
+                console.log(utils.containsPoint(penta.getBounds(), mouse.x, mouse.y));
+                pent1.forEach(function (p) {
+                    if (utils.containsPoint(p.getBounds(), mouse.x, mouse.y)) {
+                        console.log("pent "+p.x+" "+ p.y);
+                        console.log("mouse "+mouse.x+" "+ mouse.y);
+                        
+                        p.isMouseDown = true;
+                      //  console.log(utils.containsPoint(p.getBounds(), mouse.x, mouse.y));
+                    }
+                });
+                isMouseDown = true;
+                canvas.addEventListener('mouseup', onMouseUp, false);
+                canvas.addEventListener('mousemove', onMouseMove, false);
+
+            }, false);
+
+            function onMouseUp() {
+                pent1.forEach(function (p) {
+                    if (p.mouseIsDown) {
+                        
+                        p.isMouseDown = false;
+
+                    }
+                });
+                isMouseDown = false;
+                canvas.removeEventListener('mouseup', onMouseUp, false);
+                canvas.removeEventListener('mousemove', onMouseMove, false);
+
+            }
+
+            function onMouseMove(event) {
+
+                pent1.forEach(function (p) {
+                    if (p.isMouseDown) {
+                        p.x = mouse.x;
+                        p.y = mouse.y;
+                    }
+                });
+            }
+
+
+
+
+
 
             for (var i = 0; i < s1.sides; i++) {
                 var sideX = canvas.width / 2 + 100 * Math.cos(a * i),
                     sideY = canvas.height / 2 + 100 * Math.sin(a * i);
 
-                pent1.push(new Polygon(sideX, sideY, 5, 15, -Math.PI / i + 1));
+               // pent1.push(new Polygon(sideX, sideY, 5, 15, -Math.PI / i + 1));
+                // pent1.push(new Triangle(sideX, sideY, 75, 100));
+                //pent1[i].rotation= -Math.PI / i + 2;
+                pent1.push(new Ball(sideX,sideY,15));
             }
 
 
@@ -49,6 +106,7 @@
                 pent1.forEach(element => {
                     element.draw(context);
                 });
+                penta.draw(context);
                 s1.draw(context);
                 s2.draw(context);
             }());

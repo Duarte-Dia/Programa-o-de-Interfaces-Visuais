@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>enunciando200624
+    </title>
+    <link rel="stylesheet" href="./Style.css">
+</head>
+
+<body>
+    <canvas id="canvas" width="600" height="500">
+        <p> O Browser não suporta o elemento <code>canvas</code></p>
+        <p>https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes</p>
+    </canvas>
+
+
+    <script src="../include/utils.js"></script>
+
+  
+    <script>
+        window.onload = function () {
+            var canvas = document.getElementById('canvas'),
+                context = canvas.getContext('2d'),
+                isMouseDown = false,
+                mouse = utils.captureMouse(canvas);
+
+                canvas.addEventListener('mousedown', function () {
+                if (utils.containsPoint(s1.getBounds(), mouse.x, mouse.y)) {
+                    isMouseDown = true;
+                    canvas.addEventListener('mouseup', onMouseUp, false);
+                    canvas.addEventListener('mousemove', onMouseMove, false);
+                }
+            }, false);
+
+            function onMouseUp() {
+                isMouseDown = false;
+                canvas.removeEventListener('mouseup', onMouseUp, false);
+                canvas.removeEventListener('mousemove', onMouseMove, false);
+            }
+
+            function onMouseMove(event) {
+                  s1.x = mouse.x;
+                 s1.y = mouse.y;
+            }
+
+         
+
+
+            (function drawFrame() {
+                window.requestAnimationFrame(drawFrame, canvas);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+               
+            }());
+        };
+    </script>
+</body>
+
+</html>

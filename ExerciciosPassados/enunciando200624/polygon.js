@@ -6,14 +6,21 @@ function Polygon(x,y,sides,radius,rotation) {
     this.rotation=rotation;
     this.strokeColor = "#ffff00";
     this.fillColor = "#007700";
+    
+    
+    this.isMouseDown=false;
+    // this.img = new Image();
+    // this.img.src = "./Imagens/tacos.jpg";
 
-    this.img = new Image();
-    this.img.src = "./Imagens/tacos.jpg";
+    // this.img.addEventListener('load', function(){
+    //     this.imgCarregada = true;
+    //     console.log("CARREGADA")
+    // }.bind(this), false);
 
-    this.img.addEventListener('load', function(){
-        this.imgCarregada = true;
-        console.log("CARREGADA")
-    }.bind(this), false);
+    //this.spring =0.001;
+    // this.vx = 3;
+    // this.vy = 3;
+    // this.velocidadeDefeito =3;
     
   }
   
@@ -22,7 +29,8 @@ function Polygon(x,y,sides,radius,rotation) {
     context.save();
     context.translate(this.x, this.y);
     context.rotate(this.rotation);
-    context.fillStyle =  context.createPattern(this.img, "repeat");
+  //  context.fillStyle =  context.createPattern(this.img, "repeat");
+  context.fillStyle= this.fillColor;
     context.strokeStyle = this.strokeColor;
   
     
@@ -39,3 +47,14 @@ function Polygon(x,y,sides,radius,rotation) {
     context.stroke();
     context.restore();
   }
+
+
+
+  Polygon.prototype.getBounds = function () {
+    return {
+        x: this.x - this.radius,
+        y: this.y - this.radius,
+        width: this.radius * 2,
+        height: this.radius * 2
+    };
+  };
