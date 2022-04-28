@@ -10,6 +10,8 @@ function Triangle(x, y, base, altura) {
     this.fillColor = "#007700";
     this.lineWidth = 3;
     this.rotacao = 0;
+    this.isMouseDown=false;
+
     this.max = 0.0005;
     this.min = 0;
     this.spring = ((Math.random() * (this.max - this.min)) + this.min);
@@ -60,7 +62,14 @@ Triangle.prototype.atualizaPosicao= function(pontoClique) {
     // atualiza rotação
     this.rotacao = angle;
 }
-
+Triangle.prototype.getBounds = function () {
+    return {
+        x: this.x - this.altura,
+        y: this.y - this.base,
+        width: this.altura * 2,
+        height: this.base * 2
+    };
+  };
 
 
 

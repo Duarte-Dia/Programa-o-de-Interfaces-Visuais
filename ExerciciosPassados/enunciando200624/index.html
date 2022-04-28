@@ -20,6 +20,7 @@
     <script src="../../include/utils.js"></script>
 
     <script src="./polygon.js"></script>
+    <script src="./triangulo.js"></script>
     <script src="./ball.js"></script>
     <script>
         window.onload = function () {
@@ -30,26 +31,35 @@
 
 
             const a = (2 * Math.PI) / 4;
+            const a2 = (2 * Math.PI) / 8;
+            var left = 0,
+                right = canvas.width,
+                top = 0,
+                bottom = canvas.height;
 
 
             var s1 = new Polygon(canvas.width / 2, canvas.height / 2, 4, 100, -Math.PI / 4);
 
             var s2 = new Polygon(canvas.width / 2, canvas.height / 2, 4, 100, 0);
-            var penta = new Polygon(100,100, 5, 15, -Math.PI / i + 1);
+
             var pent1 = [];
             var pent2 = [];
-            
+
 
 
             canvas.addEventListener('mousedown', function () {
-                console.log(utils.containsPoint(penta.getBounds(), mouse.x, mouse.y));
+
                 pent1.forEach(function (p) {
+
+
                     if (utils.containsPoint(p.getBounds(), mouse.x, mouse.y)) {
-                        console.log("pent "+p.x+" "+ p.y);
-                        console.log("mouse "+mouse.x+" "+ mouse.y);
-                        
+                        console.log("pent " + p.x + " " + p.y);
+                        console.log("mouse " + mouse.x + " " + mouse.y);
+                        console.log(utils.containsPoint(p.getBounds(), mouse.x, mouse.y));
+
                         p.isMouseDown = true;
-                      //  console.log(utils.containsPoint(p.getBounds(), mouse.x, mouse.y));
+
+                        //  console.log(utils.containsPoint(p.getBounds(), mouse.x, mouse.y));
                     }
                 });
                 isMouseDown = true;
@@ -59,13 +69,13 @@
             }, false);
 
             function onMouseUp() {
-                pent1.forEach(function (p) {
-                    if (p.mouseIsDown) {
-                        
-                        p.isMouseDown = false;
+                // pent1.forEach(function (p) {
+                //     if (p.isMouseDown) {
 
-                    }
-                });
+                //         p.isMouseDown = false;
+
+                //     }
+                // });
                 isMouseDown = false;
                 canvas.removeEventListener('mouseup', onMouseUp, false);
                 canvas.removeEventListener('mousemove', onMouseMove, false);
@@ -74,28 +84,56 @@
 
             function onMouseMove(event) {
 
-                pent1.forEach(function (p) {
-                    if (p.isMouseDown) {
-                        p.x = mouse.x;
-                        p.y = mouse.y;
-                    }
-                });
+                // pent1.forEach(function (p) {
+                //     if (p.isMouseDown) {
+                //         p.x = mouse.x;
+                //         p.y = mouse.y;
+                //     }
+                // });
             }
 
 
+            function gravitate(partA, partB) {
+                var dx = partB.x - partA.x,
+                    dy = partB.y - partA.y,
+                    distSQ = dx * dx + dy * dy,
+                    dist = Math.sqrt(distSQ),
+                    force = 0.001,
+                    ax = force * dx / dist,
+                    ay = force * dy / dist;
+                partA.vx += ax / partA.mass;
+                partA.vy += ay / partA.mass;
+                partB.vx -= ax / partB.mass;
+                partB.vy -= ay / partB.mass;
+            }
 
-
-
+            function move(partA, i) {
+                if (partA.isMoving) {
+                    for (var partB, j = i + 1; j < pent1.length; j++) {
+                        var partB = pent1[j];
+                        if (partB.isMoving) {
+                            gravitate(partA, partB);
+                        }
+                    }
+                }
+            }
 
             for (var i = 0; i < s1.sides; i++) {
                 var sideX = canvas.width / 2 + 100 * Math.cos(a * i),
                     sideY = canvas.height / 2 + 100 * Math.sin(a * i);
 
-               // pent1.push(new Polygon(sideX, sideY, 5, 15, -Math.PI / i + 1));
-                // pent1.push(new Triangle(sideX, sideY, 75, 100));
+                var sideX2 = canvas.width / 2 + 100 * Math.cos((a * i) + Math.PI / 4),
+                    sideY2 = canvas.height / 2 + 100 * Math.sin((a * i) + Math.PI / 4);
+
+                pent1.push(new Polygon(sideX, sideY, 5, 15, i * Math.PI / 2));
+                //console.log(pent1[i].rotation);
+                pent1.push(new Polygon(sideX2, sideY2, 5, 15, (i * Math.PI / 2) + Math.PI / 4));
+                // pent1.push(new Triangle(sideX, sideY, 25, 50));
                 //pent1[i].rotation= -Math.PI / i + 2;
-                pent1.push(new Ball(sideX,sideY,15));
+                //  pent1.push(new Ball(sideX,sideY,15));
             }
+
+
 
 
 
@@ -103,10 +141,39 @@
                 window.requestAnimationFrame(drawFrame, canvas);
                 context.clearRect(0, 0, canvas.width, canvas.height);
 
+
+
                 pent1.forEach(element => {
+                    if (element.x + element.r > right) {
+                        element.x = right - element.r;
+                        element.vx *= -1;
+                    } else if (element.x - element.r < left) {
+                        element.x = left + element.r;
+                        element.vx *= -1;
+                    }
+                    if (element.y + element.r > bottom) {
+                        element.y = bottom - element.r;
+                        element.vy *= -1;
+                    } else if (element.y - element.r < top) {
+                        element.y = top + element.r;
+                        element.vy *= -1;
+                    }
+                    if (element.isMouseDown) {
+
+                        element.atualizaPosicao();
+                        element.isMoving = true;
+
+                    }
+
+                    // var dx = mouse.x - element.x,
+                    // dy = mouse.y - element.y,
+                    // angle = Math.atan2(dy, dx);
+                    // element.rotation =angle;
                     element.draw(context);
                 });
-                penta.draw(context);
+                
+                    pent1.forEach(move);
+                
                 s1.draw(context);
                 s2.draw(context);
             }());
