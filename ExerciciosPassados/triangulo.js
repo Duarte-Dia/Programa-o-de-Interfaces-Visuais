@@ -1,16 +1,13 @@
-
 //NEEDS TO BE WORKED ON 
 function Triangle(x, y, base, altura) {
-
     this.altura = altura;
     this.base = base;
     this.x = x;
     this.y = y;
     this.strokeColor = "#ffff00";
     this.fillColor = "#007700";
-    this.lineWidth = 3;
-    this.rotacao = 0;
-    this.isMouseDown=false;
+    this.rotation = 0;
+    this.anima=false;
 
     this.max = 0.0005;
     this.min = 0;
@@ -30,17 +27,9 @@ Triangle.prototype.draw = function (context){
     context.fillStyle = this.fillColor;
    
     context.beginPath();
-
-  // context.moveTo( this.altura,   this.base / 2);
-    // context.lineTo(  0,   this.base );
-    // context.lineTo(  0 , 0);
-    // context.lineTo(  this.altura ,  this.base/2);
-
- //context.moveTo( this.altura/2,   this.base / 2);
-     context.lineTo(  this.altura/2,  0);
-     context.lineTo(  -this.altura/2,   this.base/2);
-    context.lineTo(  -this.altura/2 ,  -this.base/2);
-
+    context.lineTo(this.altura/2, 0);
+    context.lineTo(-this.altura/2, -this.base/2);
+    context.lineTo(-this.altura/2 , this.base/2);
     context.closePath();
     context.stroke();
     context.fill();
@@ -60,7 +49,7 @@ Triangle.prototype.atualizaPosicao= function(pontoClique) {
     this.y += this.vy;
 
     // atualiza rotação
-    this.rotacao = angle;
+    this.rotation = angle;
 }
 Triangle.prototype.getBounds = function () {
     return {

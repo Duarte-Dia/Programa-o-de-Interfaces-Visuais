@@ -1,0 +1,9 @@
+body {
+    background:#dddddd;
+}
+#canvas {
+    margin: 1px;
+    padding: 1px;
+    background: #d5edeb;
+    border: thin outset #aaaaaa;
+}

@@ -10,13 +10,13 @@ function Polygon(x, y, sides, radius, rotation) {
 
   this.isMouseDown = false;
   this.isMoving = false;
-  // this.img = new Image();
-  // this.img.src = "./Imagens/tacos.jpg";
+   this.img = new Image();
+   this.img.src = "./Imagens/tacos.jpg";
 
-  // this.img.addEventListener('load', function(){
-  //     this.imgCarregada = true;
-  //     console.log("CARREGADA")
-  // }.bind(this), false);
+   this.img.addEventListener('load', function(){
+       this.imgCarregada = true;
+      console.log("CARREGADA")
+   }.bind(this), false);
 
   this.spring =0.001;
   this.vx = 0;
@@ -30,8 +30,8 @@ Polygon.prototype.draw = function (context) {
   context.save();
   context.translate(this.x, this.y);
   context.rotate(this.rotation);
-  //  context.fillStyle =  context.createPattern(this.img, "repeat");
-  context.fillStyle = this.fillColor;
+    context.fillStyle =  context.createPattern(this.img, "repeat");
+  //context.fillStyle = this.fillColor;
   context.strokeStyle = this.strokeColor;
 
 
