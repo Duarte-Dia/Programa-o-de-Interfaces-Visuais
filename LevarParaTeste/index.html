@@ -18,21 +18,73 @@
 
 
     <script src="../include/utils.js"></script>
-
-  
+    <script src="./polygon.js"></script>
+    <script src="./setas.js"></script>
     <script>
         window.onload = function () {
             var canvas = document.getElementById('canvas'),
                 context = canvas.getContext('2d'),
                 isMouseDown = false,
-                mouse = utils.captureMouse(canvas);
+                mouse = utils.captureMouse(canvas),
+                p1 = new Polygon(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 3);
+            p2 = new Polygon(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 3);
+            p2.img.src = "./image/Tex02.jpg";
+            p2.rotation = Math.PI / 2;
 
-                canvas.addEventListener('mousedown', function () {
-                if (utils.containsPoint(s1.getBounds(), mouse.x, mouse.y)) {
+            var setas = [];
+            var left = 25,
+                right = canvas.width - 25,
+                top = 25,
+                bottom = canvas.height - 25;
+
+            for (var i = 0; i < 8; i++) {
+                setas.push(new Seta(25, 15));
+
+                var red = numAleatorio(0, 155),
+                    blue = numAleatorio(0, 155),
+                    green = numAleatorio(0, 155);
+                setas[i].colorFill = rgbToHex(red, green, blue);
+                setas[i].rotation = numAleatorio(0, 2 * Math.PI);
+            }
+
+
+
+
+
+
+            function numAleatorio(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function componentToHex(c) {
+                var hex = c.toString(16);
+                return hex.length == 1 ? "0" + hex : hex;
+            }
+
+            function rgbToHex(r, g, b) {
+                return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+            }
+
+
+            canvas.addEventListener('mousedown', function () {
+                if (utils.containsPoint(setas[1].getBounds(), mouse.x, mouse.y)) {
                     isMouseDown = true;
-                    canvas.addEventListener('mouseup', onMouseUp, false);
-                    canvas.addEventListener('mousemove', onMouseMove, false);
+
+                } else {
+                    var s = new Seta(25, 15);
+
+
+                    var red = numAleatorio(0, 155),
+                        blue = numAleatorio(0, 155),
+                        green = numAleatorio(0, 155);
+                    s.colorFill = rgbToHex(red, green, blue);
+                    s.rotation = numAleatorio(0, 2 * Math.PI);
+                    s.x = mouse.x;
+                    s.y = mouse.y;
+                    setas.push(s);
                 }
+                canvas.addEventListener('mouseup', onMouseUp, false);
+                canvas.addEventListener('mousemove', onMouseMove, false);
             }, false);
 
             function onMouseUp() {
@@ -42,18 +94,77 @@
             }
 
             function onMouseMove(event) {
-                  s1.x = mouse.x;
-                 s1.y = mouse.y;
+                s1.x = mouse.x;
+                s1.y = mouse.y;
             }
 
-         
 
+            function gravitate(partA, partB) {
+                var dx = partB.x - partA.x,
+                    dy = partB.y - partA.y,
+                    distSQ = dx * dx + dy * dy,
+                    dist = Math.sqrt(distSQ),
+                    force = 3,
+                    ax = force * dx / dist,
+                    ay = force * dy / dist;
+                partA.vx += ax / partA.mass;
+                partA.vy += ay / partA.mass;
+                partB.vx -= ax / partB.mass;
+                partB.vy -= ay / partB.mass;
+            }
+
+            function move(partA, i) {
+                if (partA.isMoving) {
+                    for (var partB, j = i + 1; j < pent1.length; j++) {
+                        var partB = pent1[j];
+                        if (partB.isMoving) {
+                            gravitate(partA, partB);
+                        }
+                    }
+                }
+            }
+
+            function desenhaNome(context) {
+                context.save();
+                context.font = "12pt Helvetica";
+                context.textAlign = "right"
+                context.textBaseline = "hanging"
+                context.fillStyle = "#03b303"
+                context.fillText("Duarte Dias ", canvas.width, 0);
+                context.restore();
+            }
 
             (function drawFrame() {
                 window.requestAnimationFrame(drawFrame, canvas);
                 context.clearRect(0, 0, canvas.width, canvas.height);
+                p1.drawP1(context);
+                p2.drawP2(context);
 
-               
+                setas.forEach(element => {
+                    if (element.x > right) {
+                        element.x = right;
+                        element.vx *= -1;
+                    } else if (element.x < left) {
+                        element.x = left;
+                        element.vx *= -1;
+                    }
+                    if (element.y > bottom) {
+                        element.y = bottom;
+                        element.vy *= -1;
+                    } else if (element.y < top) {
+                        element.y = top;
+                        element.vy *= -1;
+                    }
+
+
+                    element.atualizaPosicao();
+
+
+
+                    element.draw(context);
+                });
+
+                desenhaNome(context);
             }());
         };
     </script>
